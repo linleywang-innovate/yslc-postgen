@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gemini 貼文生成器 MVP</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 min-h-screen p-4">
   <div class="bg-white w-full max-w-2xl px-8 py-10 rounded-2xl shadow-xl mx-auto">
     <div class="flex items-center justify-center mb-10">
@@ -63,20 +64,33 @@
 
       <div class="md:col-span-2">
         <label class="font-semibold">發文創意主題（可結合節慶、特殊主題）</label>
-        <input type="text" id="creativeTheme" class="w-full mt-1 p-2 border rounded" placeholder="例如：中秋節、咖啡展、環保日...">
+        <input
+          type="text"
+          id="creativeTheme"
+          class="w-full mt-1 p-2 border rounded"
+          placeholder="例如：中秋節、咖啡展、環保日..."
+        />
       </div>
 
       <div>
         <label class="font-semibold">貼文語氣</label>
         <select id="tone" class="w-full mt-1 p-2 border rounded">
-          <option value="平實誠懇，用詞自然真誠，不矯揉造作，像是朋友之間的聊天，不用過度形容。文句簡潔明確，每次產出以短句為主，資訊直接、明快，避免冗長敘述。具有社群感與人味，喜歡使用「我們」、「你」、「一起」等等字詞有親切感，也可以在內文中加入幽默俏皮的點綴，像是：是的，這次也很無聊。">Boring</option>
-          <option value="輕鬆幽默，聰明有趣的語氣，但不失去品牌的專業與品味感。能融合咖啡文化、生活感，避免過度銷售導向，避免制式的宣傳語，鼓勵觀看者互動與想像，能引發大家的好奇心。同時代表的是經典與信任感的象徵。可以帶點俏皮但是避免腥羶色的語句。">Bonsoy</option>
-          <option value="輕鬆幽默，享受生活，快樂暢飲">Remedy</option>
-
-          <!-- ✅ 修正：這行原本語法錯誤（多了引號/句點） -->
-          <option value="穩重，簡潔，專業，有智慧，文字不浮誇，語言樸實有智慧邏輯，多談論料理的應用，減少產品規格的討論，多點品牌價值的訴求。">AUSTRUE</option>
-
-          <option value="穩重，簡潔，專業，有智慧，文字不浮誇">其他</option>
+          <option value="平實誠懇，用詞自然真誠，不矯揉造作，像是朋友之間的聊天，不用過度形容。文句簡潔明確，每次產出以短句為主，資訊直接、明快，避免冗長敘述。具有社群感與人味，喜歡使用「我們」、「你」、「一起」等等字詞有親切感，也可以在內文中加入幽默俏皮的點綴，像是：是的，這次也很無聊。">
+            Boring
+          </option>
+          <option value="輕鬆幽默，聰明有趣的語氣，但不失去品牌的專業與品味感。能融合咖啡文化、生活感，避免過度銷售導向，避免制式的宣傳語，鼓勵觀看者互動與想像，能引發大家的好奇心。同時代表的是經典與信任感的象徵。可以帶點俏皮但是避免腥羶色的語句。">
+            Bonsoy
+          </option>
+          <option value="輕鬆幽默，享受生活，快樂暢飲">
+            Remedy
+          </option>
+          <!-- ✅ 修正：原本這行語法錯誤 -->
+          <option value="穩重，簡潔，專業，有智慧，文字不浮誇，語言樸實有智慧邏輯，多談論料理的應用，減少產品規格的討論，多點品牌價值的訴求。">
+            AUSTRUE
+          </option>
+          <option value="穩重，簡潔，專業，有智慧，文字不浮誇">
+            其他
+          </option>
         </select>
       </div>
 
@@ -90,19 +104,24 @@
       </div>
 
       <div class="flex items-center mt-4">
-        <input type="checkbox" id="needHashtag" checked class="mr-2">
+        <input type="checkbox" id="needHashtag" checked class="mr-2" />
         <label for="needHashtag">需要 hashtag</label>
       </div>
 
       <div class="flex items-center mt-4">
-        <input type="checkbox" id="needImage" checked class="mr-2">
+        <input type="checkbox" id="needImage" checked class="mr-2" />
         <label for="needImage">需要圖片建議</label>
       </div>
     </div>
 
     <!-- 按鈕 -->
     <div class="text-center mt-8">
-      <button id="generateBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full">✨ 生成貼文</button>
+      <button
+        id="generateBtn"
+        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full"
+      >
+        ✨ 生成貼文
+      </button>
     </div>
 
     <!-- 結果顯示區 -->
@@ -110,6 +129,12 @@
   </div>
 
   <script>
+    // ⚠️ 這是「前端直連」版本：API Key 會暴露在網頁原始碼中
+    const apiKey = "PASTE_YOUR_NEW_API_KEY_HERE";
+
+    // 你原本用的 preview model（可改成 gemini-2.5-flash 之類穩定名稱）
+    const model = "gemini-2.5-flash-preview-05-20";
+
     document.getElementById('generateBtn').addEventListener('click', async () => {
       const brand = document.getElementById('brand').value;
       const product = document.getElementById('product').value;
@@ -121,8 +146,13 @@
       const needHashtag = document.getElementById('needHashtag').checked;
       const needImage = document.getElementById('needImage').checked;
 
-      let prompt = `請根據以下條件撰寫一篇約 ${length} 字的社群貼文：\n\n` +
-        `品牌：${brand}\n產品：${product}\n發文目的：${goal}\n目標對象：${audience}\n語氣：${tone}\n`;
+      let prompt =
+        `請根據以下條件撰寫一篇約 ${length} 字的社群貼文：\n\n` +
+        `品牌：${brand}\n` +
+        `產品：${product}\n` +
+        `發文目的：${goal}\n` +
+        `目標對象：${audience}\n` +
+        `語氣：${tone}\n`;
 
       if (creativeTheme) prompt += `創意主題：${creativeTheme}\n`;
       if (needImage) prompt += `\n請提供建議的圖片描述。`;
@@ -132,20 +162,30 @@
       output.textContent = '生成中…';
 
       try {
-        // ✅ 改成呼叫你自己的後端（Netlify Function）
-        const res = await fetch('/.netlify/functions/generate', {
+        if (!apiKey || apiKey.includes("PASTE_YOUR_NEW_API_KEY_HERE")) {
+          throw new Error("請先在程式碼中填入新的 Gemini API Key");
+        }
+
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+        const payload = {
+          contents: [{ role: "user", parts: [{ text: prompt }] }]
+        };
+
+        const res = await fetch(url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            prompt,
-            model: 'gemini-2.5-flash' // 建議用穩定型號
-          })
+          body: JSON.stringify(payload)
         });
 
         const data = await res.json();
-        if (!res.ok) throw new Error(data?.error || '無法產生貼文');
 
-        output.textContent = data.text || '無內容返回';
+        const text =
+          data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+          data?.error?.message ||
+          '無法產生貼文，請檢查 API 金鑰或提示內容';
+
+        output.textContent = text;
       } catch (err) {
         output.textContent = `無法產生貼文：${err.message}`;
       }
