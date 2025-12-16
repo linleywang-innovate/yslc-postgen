@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gemini 貼文生成器 MVP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-4">
+  <div class="bg-white w-full max-w-2xl px-8 py-10 rounded-2xl shadow-xl mx-auto">
+    <div class="flex items-center justify-center mb-10">
+      <div class="w-8 h-8 rounded-full mr-3" style="background-color: #1F2468;"></div>
+      <h1 class="text-3xl font-bold text-gray-800">YSLC社群貼文產生器</h1>
+    </div>
+
+    <!-- 輸入區域 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="font-semibold">品牌名稱</label>
+        <select id="brand" class="w-full mt-1 p-2 border rounded">
+          <option value="Boring">Boring</option>
+          <option value="Bonsoy">Bonsoy</option>
+          <option value="Remedy">Remedy</option>
+          <option value="Bondichai">Bondichai</option>
+          <option value="somage">somage</option>
+          <option value="AUSTRUE">AUSTRUE</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="font-semibold">產品名稱</label>
+        <select id="product" class="w-full mt-1 p-2 border rounded">
+          <option value="咖啡師燕麥奶">咖啡師燕麥奶</option>
+          <option value="棒豆奶">棒豆奶</option>
+          <option value="澳式精釀康普茶">澳式精釀康普茶</option>
+          <option value="氣泡椰子水">氣泡椰子水</option>
+          <option value="香料奶茶">香料奶茶</option>
+          <option value="燕麥奶">燕麥奶</option>
+          <option value="澳廚芥花油">澳廚芥花油</option>
+          <option value="澳廚封香大蒜油">澳廚封香大蒜油</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="font-semibold">發文目的</label>
+        <select id="goal" class="w-full mt-1 p-2 border rounded">
+          <option value="推廣產品">推廣產品</option>
+          <option value="品牌形象">品牌形象</option>
+          <option value="教育知識">教育知識</option>
+          <option value="合作宣傳">合作宣傳</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="font-semibold">目標對象</label>
+        <select id="audience" class="w-full mt-1 p-2 border rounded">
+          <option value="咖啡師">咖啡師</option>
+          <option value="店主">店主</option>
+          <option value="消費者">消費者</option>
+          <option value="採購">採購</option>
+        </select>
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="font-semibold">發文創意主題（可結合節慶、特殊主題）</label>
+        <input type="text" id="creativeTheme" class="w-full mt-1 p-2 border rounded" placeholder="例如：中秋節、咖啡展、環保日...">
+      </div>
+
+      <div>
+        <label class="font-semibold">貼文語氣</label>
+        <select id="tone" class="w-full mt-1 p-2 border rounded">
+          <option value="平實誠懇，用詞自然真誠，不矯揉造作，像是朋友之間的聊天，不用過度形容。文句簡潔明確，每次產出以短句為主，資訊直接、明快，避免冗長敘述。具有社群感與人味，喜歡使用「我們」、「你」、「一起」等等字詞有親切感，也可以在內文中加入幽默俏皮的點綴，像是：是的，這次也很無聊。">Boring</option>
+          <option value="輕鬆幽默，聰明有趣的語氣，但不失去品牌的專業與品味感。能融合咖啡文化、生活感，避免過度銷售導向，避免制式的宣傳語，鼓勵觀看者互動與想像，能引發大家的好奇心。同時代表的是經典與信任感的象徵。可以帶點俏皮但是避免腥羶色的語句。">Bonsoy</option>
+          <option value="輕鬆幽默，享受生活，快樂暢飲">Remedy</option>
+
+          <!-- ✅ 修正：這行原本語法錯誤（多了引號/句點） -->
+          <option value="穩重，簡潔，專業，有智慧，文字不浮誇，語言樸實有智慧邏輯，多談論料理的應用，減少產品規格的討論，多點品牌價值的訴求。">AUSTRUE</option>
+
+          <option value="穩重，簡潔，專業，有智慧，文字不浮誇">其他</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="font-semibold">產生字數</label>
+        <select id="length" class="w-full mt-1 p-2 border rounded">
+          <option value="100">約100字</option>
+          <option value="150">約150字</option>
+          <option value="200">約200字</option>
+        </select>
+      </div>
+
+      <div class="flex items-center mt-4">
+        <input type="checkbox" id="needHashtag" checked class="mr-2">
+        <label for="needHashtag">需要 hashtag</label>
+      </div>
+
+      <div class="flex items-center mt-4">
+        <input type="checkbox" id="needImage" checked class="mr-2">
+        <label for="needImage">需要圖片建議</label>
+      </div>
+    </div>
+
+    <!-- 按鈕 -->
+    <div class="text-center mt-8">
+      <button id="generateBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full">✨ 生成貼文</button>
+    </div>
+
+    <!-- 結果顯示區 -->
+    <div id="output" class="mt-8 p-4 bg-gray-50 border rounded whitespace-pre-wrap"></div>
+  </div>
+
+  <script>
+    document.getElementById('generateBtn').addEventListener('click', async () => {
+      const brand = document.getElementById('brand').value;
+      const product = document.getElementById('product').value;
+      const goal = document.getElementById('goal').value;
+      const audience = document.getElementById('audience').value;
+      const tone = document.getElementById('tone').value;
+      const creativeTheme = document.getElementById('creativeTheme').value;
+      const length = document.getElementById('length').value;
+      const needHashtag = document.getElementById('needHashtag').checked;
+      const needImage = document.getElementById('needImage').checked;
+
+      let prompt = `請根據以下條件撰寫一篇約 ${length} 字的社群貼文：\n\n` +
+        `品牌：${brand}\n產品：${product}\n發文目的：${goal}\n目標對象：${audience}\n語氣：${tone}\n`;
+
+      if (creativeTheme) prompt += `創意主題：${creativeTheme}\n`;
+      if (needImage) prompt += `\n請提供建議的圖片描述。`;
+      if (needHashtag) prompt += `\n請提供兩組 hashtag：一組熱門，一組精準。`;
+
+      const output = document.getElementById('output');
+      output.textContent = '生成中…';
+
+      try {
+        // ✅ 改成呼叫你自己的後端（Netlify Function）
+        const res = await fetch('/.netlify/functions/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            prompt,
+            model: 'gemini-2.5-flash' // 建議用穩定型號
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data?.error || '無法產生貼文');
+
+        output.textContent = data.text || '無內容返回';
+      } catch (err) {
+        output.textContent = `無法產生貼文：${err.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
